@@ -54,3 +54,4 @@
 ## Additional Notes
 
 <!-- Any other context for the AI agent. Links, references, examples, related past work. -->
+<!-- If relevant, include where shared learnings live or any project-specific review checklists to emphasize. -->

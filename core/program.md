@@ -12,7 +12,7 @@ Before doing anything, read these files in order:
 2. **`quality-config.md`** — Understand how quality is measured for this project
 3. **`intents/active-intent.md`** — Understand what the user wants built
 4. **`results/learnings.md`** — Review past project-specific patterns (if file exists)
-5. **`../sharedlearnings.md`** or the AutoBuild repo's `sharedlearnings.md` — Review cross-project systematic patterns (if available)
+5. **Shared learnings source from `project-context.md`** — Review cross-project systematic patterns only if an explicit source path is provided and accessible
 
 After reading all context, proceed to Phase 1.
 
@@ -53,7 +53,7 @@ IMPLEMENTATION PLAN:
 DONE WHEN:
 - [ ] [Acceptance criteria 1 from intent]
 - [ ] [Acceptance criteria 2 from intent]
-- [ ] Quality Pipeline score ≥ [threshold from quality-config.md]
+- [ ] Delivery readiness is acceptable with notes or better
 - [ ] All sub-agent reviews pass
 ```
 
@@ -86,10 +86,10 @@ Execute the selected build program. Read the appropriate program file:
 3. Compute the composite Quality Score (0-100)
 4. Log the result to `results/results.tsv`
 
-**Keep/Discard Rule:**
-- If Quality Score improved or maintained → **KEEP** (git commit)
-- If Quality Score decreased → **DISCARD** (git reset)
-- If a security check fails → **ALWAYS DISCARD** regardless of other scores
+**Two Decisions After Each Iteration:**
+- **Retention decision:** If Quality Score improved or maintained and there is no CRITICAL security failure → **KEEP** the branch state
+- **Retention decision:** If Quality Score decreased or a CRITICAL security failure is present → **DISCARD** the branch state
+- **Readiness decision:** Score `>= 80` is ready to deliver, `60-79` is acceptable with notes, `< 60` is not ready for delivery
 
 ---
 
@@ -109,7 +109,8 @@ After the build phase completes, invoke each sub-agent for specialized review. R
 
 3. **Quality Scorer** (`agents/quality-scorer.md`)
    - Final quality pipeline run and scoring
-   - If score < threshold → go back to Phase 3
+   - Report both branch retention outcome and delivery readiness band
+   - If the result is not ready for delivery, go back to Phase 3
 
 4. **Test Writer** (`agents/test-writer.md`)
    - Ensure adequate test coverage for new/changed code
@@ -161,6 +162,11 @@ Generate `evaluation/latest-review.md` with:
 [MERGE / NEEDS CHANGES / DISCUSS WITH HUMAN]
 ```
 
+Use the shipped review artifacts while preparing the final evaluation:
+- `evaluation/review-checklist.md` for overall quality review
+- `evaluation/security-checklist.md` for security-specific validation
+- `evaluation/architecture-checklist.md` for architecture validation
+
 Present this to the human for final evaluation.
 
 ---
@@ -197,6 +203,6 @@ After human approval (or after overnight run completes):
 3. **Never modify files outside the scope defined in the intent.** If more files need changing, update the intent first.
 4. **Always log to results.tsv.** Every experiment attempt, kept or discarded.
 5. **Always work on a branch.** Never commit directly to main.
-6. **In overnight mode: NEVER STOP.** Keep iterating until interrupted by the human.
+6. **In overnight mode: stay autonomous.** Keep iterating until interrupted by the human or until the plateau rules in the overnight program tell you to stop.
 7. **Always read project-context.md before writing code.** Follow all conventions listed there.
 8. **Always read learnings.md before starting.** Don't repeat mistakes already documented.

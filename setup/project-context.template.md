@@ -8,6 +8,7 @@
 - **Description:** <!-- One sentence: what does this project do? -->
 - **Primary language:** <!-- e.g., Python 3.12, TypeScript 5.x, Go 1.22 -->
 - **Framework:** <!-- e.g., FastAPI, Next.js, Gin, Actix -->
+- **Shared learnings source (optional):** <!-- Absolute path, repo-relative path, or "none" -->
 
 ## Tech Stack
 

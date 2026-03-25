@@ -22,9 +22,10 @@ Invoke the **Builder Agent** (`agents/builder.md`):
 
 Invoke the **Quality Scorer** (`agents/quality-scorer.md`):
 - Run the full quality pipeline
-- Score must meet the threshold (default: ≥ 60)
+- Keep the branch state only if the iteration improves or holds steady and has no CRITICAL security issue
+- Treat delivery readiness separately: `>= 80` ready to deliver, `60-79` acceptable with notes, `< 60` not ready
 
-**If score < threshold:**
+**If the result is not ready for delivery:**
 - Review the failing checks
 - Have the Builder Agent fix the issues
 - Re-run the quality pipeline
@@ -41,7 +42,7 @@ Run all sub-agent reviews (Phase 4 of `program.md`):
 ### Step 4: Final Score
 
 Invoke **Quality Scorer** one final time (post-reviews, post-test-writing):
-- This is the definitive score
+- This is the definitive readiness report
 - Log to `results/results.tsv`
 
 ### Step 5: Present
@@ -52,7 +53,7 @@ Generate `evaluation/latest-review.md` and present to human.
 
 A standard build is complete when:
 - All acceptance criteria are met
-- Quality Score ≥ threshold
+- The final result is at least acceptable with notes
 - No CRITICAL security findings
 - No architecture violations
 - Human has reviewed and approved

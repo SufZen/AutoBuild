@@ -4,7 +4,7 @@
 
 # Project Learnings
 
-This file accumulates knowledge from every AutoBuild intent executed on this project. The orchestrator (`program.md`) reads this file before every new intent to avoid repeating mistakes and to leverage proven patterns.
+This file accumulates knowledge from every AutoBuild intent executed on this project. The orchestrator (`.autobuild/program.md` after installation) reads this file before every new intent to avoid repeating mistakes and to leverage proven patterns.
 
 ---
 

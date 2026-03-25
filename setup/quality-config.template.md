@@ -2,18 +2,21 @@
 
 > Configure quality checks, weights, and commands for your project. Start from a stack preset or customize from scratch.
 
+AutoBuild uses **7 canonical checks**: tests, lint/format, security, type safety, complexity, coverage, and architecture.
+
 ## Check Commands
 
-Fill in the commands that your project uses for each check:
+Fill in the commands that your project uses for each check. A single check may run more than one command when needed.
 
 | Check | Command | Expected Output |
 | --- | --- | --- |
 | **Tests** | `<!-- e.g., pytest -v -->` | Exit code 0 = pass |
-| **Lint** | `<!-- e.g., ruff check . -->` | Exit code 0 = clean |
+| **Lint / Format** | `<!-- e.g., ruff check . && ruff format --check . -->` | Exit code 0 = clean and formatted |
 | **Type Check** | `<!-- e.g., mypy src/ -->` | Exit code 0 = pass |
-| **Security** | `<!-- e.g., bandit -r src/ -->` | No HIGH/CRITICAL findings |
+| **Security** | `<!-- e.g., bandit -r src/ -ll && pip-audit -->` | No critical findings; warnings documented |
+| **Complexity** | `<!-- Manual or tool-assisted review, e.g., radon cc src/ -->` | Complexity observations recorded |
 | **Coverage** | `<!-- e.g., pytest --cov=src --cov-report=term -->` | Coverage percentage |
-| **Format** | `<!-- e.g., ruff format --check . -->` | Exit code 0 = formatted |
+| **Architecture** | `<!-- Manual review against project-context.md -->` | Compliance observations recorded |
 
 ## Weights
 
@@ -31,13 +34,16 @@ Customize how much each check contributes to the composite Quality Score.
 
 **Total must equal 100%.**
 
-## Thresholds
+## Retention and Readiness
 
-| Threshold | Value |
+AutoBuild uses two separate decisions:
+
+| Decision | Rule |
 | --- | --- |
-| **Keep** (solid quality) | ≥ 80 |
-| **Keep with notes** (acceptable) | 60 - 79 |
-| **Discard** (quality too low) | < 60 |
+| **Retention** | Keep branch state only if the iteration improves or maintains the best score and no critical security issue is present |
+| **Readiness: ready to deliver** | ≥ 80 |
+| **Readiness: acceptable with notes** | 60 - 79 |
+| **Readiness: not ready** | < 60 |
 
 ## Custom Checks (Optional)
 

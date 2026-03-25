@@ -1,6 +1,6 @@
 # Overnight Build Program
 
-> Autonomous infinite loop. Set it up, go to sleep, review results in the morning. Inspired by Karpathy's Autoresearch.
+> Autonomous long-running loop. Set it up, go to sleep, review results in the morning. Inspired by Karpathy's Autoresearch.
 
 ## When to Use
 
@@ -11,11 +11,11 @@
 
 ## Critical Rules
 
-1. **NEVER STOP.** Keep iterating until the human interrupts you or the improvement plateaus.
+1. **STAY AUTONOMOUS.** Keep iterating until the human interrupts you or the plateau rules tell you to stop.
 2. **NEVER ASK.** Do not prompt the human for input during the loop. Make autonomous decisions.
 3. **ALWAYS LOG.** Every iteration must be recorded in `results/results.tsv`.
 4. **ALWAYS BRANCH.** Never push to main. All work stays on `autobuild/[intent-name]`.
-5. **ALWAYS REVERT FAILURES.** If quality score drops, `git reset` to the last good state.
+5. **ALWAYS REVERT FAILURES.** If quality regresses or a CRITICAL security issue appears, `git reset` to the last good state.
 
 ## Workflow
 
@@ -52,18 +52,23 @@ REPEAT FOREVER:
      - Compute new quality score
 
   5. Decision:
-     IF new_score > best_score:
-       → git commit with message: "autobuild-overnight: [what changed] — score: [new_score]"
-       → Update best_score
-       → Log: [timestamp] [score] [keep] [description]
+     IF new_score >= best_score AND no CRITICAL security issue:
+        → git commit with message: "autobuild-overnight: [what changed] — score: [new_score]"
+        → Update best_score
+        → Log: [timestamp] [score] [keep] [description]
      ELSE:
-       → git reset --hard HEAD
-       → Log: [timestamp] [score] [discard] [description]
+        → git reset --hard HEAD
+        → Log: [timestamp] [score] [discard] [description]
+
+     Delivery readiness bands:
+       → score >= 80 = ready to deliver
+       → score 60-79 = acceptable with notes
+       → score < 60 = not ready yet
 
   6. Check plateau:
      IF last 5 iterations were all discarded:
-       → Try a fundamentally different approach
-       → If 10 consecutive discards, log "plateau reached" and stop
+        → Try a fundamentally different approach
+        → If 10 consecutive discards, log "plateau reached" and stop
 
   7. CONTINUE (go back to step 1)
 ```

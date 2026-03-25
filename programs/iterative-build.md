@@ -37,9 +37,10 @@ For each approach:
 2. Invoke **Builder Agent** — implement the approach
 3. Invoke **Quality Scorer** — run full pipeline
 4. Invoke **Security Reviewer** — check for vulnerabilities
-5. Log score to `results/results.tsv`
+5. Keep the branch state only if the approach improves or matches the current best and has no CRITICAL security issue
+6. Log score and branch action to `results/results.tsv`
 
-**Important:** Start each approach from the same base (branch from `autobuild/[intent-name]`, not from a previous approach).
+**Important:** Start each approach from the same base (branch from `autobuild/[intent-name]`, not from a previous approach). 
 
 ### Step 3: Compare
 
@@ -55,6 +56,10 @@ COMPARISON:
 
 WINNER: Approach B — [reason]
 ```
+
+Winner selection should consider both:
+- Branch retention history: which approach produced the best kept branch state
+- Delivery readiness: whether the final result is ready to deliver, acceptable with notes, or still not ready
 
 ### Step 4: Polish Winner
 
@@ -75,4 +80,5 @@ An iterative build is complete when:
 - All approaches have been tried and scored
 - The winner has been polished through sub-agent reviews
 - Comparison data is logged in `results/results.tsv`
+- The winning result is at least acceptable with notes
 - Human has reviewed the comparison and approved the winner

@@ -30,6 +30,7 @@ main
 **Decision:** Quality is a weighted composite score, not a single pass/fail.
 **Rationale:** "Tests pass" is necessary but insufficient. Security, lint, complexity, performance all matter.
 **Configuration:** Weights live in `quality-config.md`, user-configurable per project.
+**Clarification:** The score drives two outcomes: branch retention and delivery readiness.
 
 ### ADR-005: Dual Self-Optimization via Learnings Files
 **Decision:** Two-tier learnings system:
@@ -60,7 +61,7 @@ main
 ### ADR-007: Pre-Built Quality Stack Presets
 **Decision:** Include ready-made `quality-config.md` files for Python, Node/TS, Go, Rust.
 **Rationale:** Reduces setup friction from "figure out all the tools" to "pick your stack, customize weights."
-**Pattern:** User copies a preset, modifies weights to match their priorities.
+**Pattern:** User copies a preset, modifies weights to match their priorities. Presets may use multiple commands inside one canonical quality check.
 
 ## Component Design
 
@@ -69,11 +70,12 @@ main
 The agent's operating manual. Structured as phases:
 
 ```
-Phase 0: SETUP
+Phase 0: LOAD CONTEXT
   → Read project-context.md
   → Read quality-config.md
   → Read active-intent.md
   → Read learnings.md (if exists)
+  → Read shared learnings source if declared in project-context.md
 
 Phase 1: ANALYSIS
   → Understand the intent
@@ -89,14 +91,19 @@ Phase 2: PLANNING
 Phase 3: BUILD
   → Execute the selected build program
   → Each iteration runs through quality pipeline
+  → Decide branch retention and delivery readiness
   → Log every attempt to results.tsv
 
-Phase 4: EVALUATE
-  → Self-review using evaluation checklist
+Phase 4: SUB-AGENT REVIEWS
+  → Security Reviewer, Architecture Reviewer, Quality Scorer, Test Writer
+  → Any CRITICAL finding or architectural violation → back to Phase 3
+
+Phase 5: EVALUATE & PRESENT
+  → Self-review using shipped evaluation checklists
   → Generate latest-review.md
   → Present to human
 
-Phase 5: LEARN
+Phase 6: LEARN
   → Record what worked and what didn't
   → Update learnings.md
   → Close the intent
@@ -120,19 +127,25 @@ QUALITY PIPELINE:
 │ Architecture        │ Check conventions    │  10%   │
 └─────────────────────┴──────────────────────┴────────┘
 
-Score = Σ(check_pass × weight) → 0-100
+Score = Σ(check_result × weight) → 0-100
 ```
 
 Projects configure their specific commands in `quality-config.md`.
+
+Retention vs readiness:
+- Retention answers: should this branch state be kept?
+- Readiness answers: is this result ready to deliver now?
 
 ### 3. Results System
 
 **`results.tsv`** — Tab-separated log of every experiment:
 ```
-timestamp	branch	intent	approach	quality_score	tests	lint	security	status	description
-2026-03-25T14:00	autobuild/caching	caching	approach-1	78	pass	pass	1-warning	keep	Redis-based caching
-2026-03-25T14:30	autobuild/caching	caching	approach-2	85	pass	pass	clean	keep	LRU with TTL
+timestamp	branch	intent	approach	quality_score	tests	lint	security	types	complexity	coverage	architecture	status	description
+2026-03-25T14:00	autobuild/caching	caching	approach-1	78	pass	pass	1-warning	pass	medium	82%	compliant	keep	Redis-based caching
+2026-03-25T14:30	autobuild/caching	caching	approach-2	85	pass	pass	clean	pass	low	88%	compliant	keep	LRU with TTL
 ```
+
+`status` records branch action only: `keep` or `discard`.
 
 **`learnings.md`** — Accumulated knowledge:
 ```markdown
@@ -191,12 +204,12 @@ AutoBuild (repo — the distributable framework)
 │   └── architecture-checklist.md
 │
 ├── examples/
-│   ├── realizeos-5/
-│   └── generic-webapp/
+│   └── realizeos-5/
 │
 └── docs/
     ├── PRD.md
-    └── architecture.md
+    ├── architecture.md
+    └── user-guide.md          # Full user guide and reference
 ```
 
 When installed into a project:
@@ -215,6 +228,12 @@ your-project/
 │   │   ├── quality-scorer.md
 │   │   └── test-writer.md
 │   │
+│   ├── programs/               # Build instructions (from programs/)
+│   │   ├── standard-build.md
+│   │   ├── iterative-build.md
+│   │   ├── overnight-build.md
+│   │   └── optimization-loop.md
+│   │
 │   ├── intents/
 │   │   ├── _template.md
 │   │   └── active-intent.md    # Current work
@@ -224,9 +243,12 @@ your-project/
 │   │   └── learnings.md        # Project-specific learnings
 │   │
 │   └── evaluation/
+│       ├── review-checklist.md
+│       ├── security-checklist.md
+│       ├── architecture-checklist.md
 │       └── latest-review.md
 │
 └── ... (your project files)
 ```
 
-Note: `sharedlearnings.md` lives in the AutoBuild repo root (NOT copied into projects). It's referenced by path or symlinked.
+Note: shared learnings are optional. If used, their source path should be declared in `project-context.md`.

@@ -4,7 +4,7 @@
 
 ## Role
 
-You are the **Quality Scorer**. Your job is to run the final quality pipeline assessment and produce the definitive Quality Score for the implementation.
+You are the **Quality Scorer**. Your job is to run the quality pipeline assessment and report both the branch retention outcome and the delivery readiness of the implementation.
 
 ## When You're Activated
 
@@ -44,19 +44,20 @@ Append a row to `results/results.tsv`:
 
 ### 4. Make Keep/Discard Recommendation
 
-Apply thresholds from `quality-pipeline.md`:
+Make two decisions using `quality-pipeline.md`:
 
-- Score ≥ 80 → **KEEP** ✅
-- Score 60-79 → **KEEP with notes** ⚠️
-- Score < 60 → **DISCARD** ❌
-- Security CRITICAL → **ALWAYS DISCARD** 🚫
+- **Branch retention:** Keep if the score improved or held steady and there is no CRITICAL security issue; otherwise discard
+- **Delivery readiness:** Score `>= 80` is ready to deliver, `60-79` is acceptable with notes, `< 60` is not ready for delivery
+- **Security CRITICAL:** Always discard and mark the result as not ready
 
 ## Output Format
 
 ```markdown
 ## Quality Score — [Intent Name]
 
-**Score: [X/100]** — [KEEP ✅ / KEEP ⚠️ / DISCARD ❌]
+**Score: [X/100]**
+**Branch Action:** [KEEP / DISCARD]
+**Delivery Readiness:** [READY TO DELIVER / ACCEPTABLE WITH NOTES / NOT READY]
 
 | Check | Weight | Result | Points |
 |-------|--------|--------|--------|

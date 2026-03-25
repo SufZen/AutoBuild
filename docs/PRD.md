@@ -32,7 +32,7 @@
 ### 3.1 Intent System
 - **FR-01:** Template-based intent creation (feature / optimize / refactor / fix)
 - **FR-02:** Each intent defines: goal, scope (IN/OUT), acceptance criteria, constraints, build mode
-- **FR-03:** Build modes: `standard` (single-pass), `iterative` (multi-approach), `overnight` (autonomous loop)
+- **FR-03:** Build modes: `standard` (single-pass), `iterative` (multi-approach), `overnight` (autonomous loop), `optimize` (metric hill-climb)
 
 ### 3.2 Core Program (Agent Operating Manual)
 - **FR-04:** Single entry point (`program.md`) that orchestrates everything
@@ -45,12 +45,13 @@
 - **FR-09:** Configurable quality checks: tests, lint, types, security, performance, coverage, complexity
 - **FR-10:** Configurable weights per project (some projects care more about security, others about performance)
 - **FR-11:** Composite Quality Score computed after each iteration
-- **FR-12:** Keep/discard decision based on score improvement
+- **FR-12:** Branch retention decision based on score improvement and security outcome
+- **FR-12a:** Delivery readiness band reported separately from branch retention
 
 ### 3.4 Build Programs
 - **FR-13:** Standard build: plan → implement → quality check → self-review → present
 - **FR-14:** Iterative build: try N approaches on separate branches → score each → present best
-- **FR-15:** Overnight build: infinite loop (autoresearch-style), never stop, log everything
+- **FR-15:** Overnight build: autonomous loop (autoresearch-style), runs until interrupted or plateau criteria are met, logs everything
 - **FR-16:** Optimization loop: given a specific metric, hill-climb toward optimal value
 
 ### 3.5 Evaluation System
@@ -80,6 +81,7 @@
   - Go: go test, golangci-lint, govulncheck
   - Rust: cargo test, clippy, cargo audit
 - **FR-32:** Users can start from a preset and customize weights/commands
+- **FR-33:** Presets must still map onto the same seven canonical checks, even when one check uses multiple commands
 
 ## 4. Non-Functional Requirements
 
@@ -96,8 +98,12 @@
 ```
 .autobuild/                   ← Dropped into ANY project root
 ├── program.md                ← THE entry point (agent reads this first)
+├── quality-pipeline.md       ← Scoring rules and readiness bands
 ├── project-context.md        ← Filled in once per project
 ├── quality-config.md         ← Quality weights and tool configuration
+│
+├── agents/                   ← Sub-agent role cards
+├── programs/                 ← Build-mode instructions
 │
 ├── intents/
 │   ├── _template.md          ← Copy and fill per task
@@ -108,6 +114,9 @@
 │   └── learnings.md          ← Accumulated knowledge
 │
 └── evaluation/
+    ├── review-checklist.md
+    ├── security-checklist.md
+    ├── architecture-checklist.md
     └── latest-review.md      ← Most recent evaluation output
 ```
 
@@ -121,10 +130,11 @@
    - quality-config.md (what to measure)
    - active-intent.md (what to build)
    - learnings.md (past knowledge)
+   - shared learnings source if project-context declares one
 3. Agent builds iteratively (per selected program)
-4. Each iteration → quality pipeline → score → keep/discard
+4. Each iteration → quality pipeline → score → branch retention decision + delivery readiness
 5. Results logged to results.tsv
-6. Best result presented with evaluation/latest-review.md
+6. Best result presented with evaluation/latest-review.md plus supporting checklists
 7. Human reviews and approves/requests changes
 8. Learnings saved for next time
 ```

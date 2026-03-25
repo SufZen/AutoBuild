@@ -2,16 +2,19 @@
 
 > Pre-built quality config for Rust projects.
 
+This preset still maps to AutoBuild's 7 canonical checks. Some checks use more than one command.
+
 ## Check Commands
 
 | Check | Command | Expected Output |
 | --- | --- | --- |
 | **Tests** | `cargo test` | Exit code 0 |
-| **Lint** | `cargo clippy -- -D warnings` | Exit code 0 |
-| **Format** | `cargo fmt --check` | Exit code 0 |
+| **Lint / Format** | `cargo clippy -- -D warnings && cargo fmt --check` | Exit code 0 |
 | **Type Check** | `cargo check` | Exit code 0 |
 | **Security** | `cargo audit` | No vulnerabilities |
+| **Complexity** | `Manual review or project-specific tooling` | Complexity observations |
 | **Coverage** | `cargo tarpaulin --out Stdout` | Coverage % |
+| **Architecture** | `Manual review against project-context.md` | Compliance observations |
 
 ## Weights
 
@@ -31,3 +34,5 @@
 rustup component add clippy
 cargo install cargo-audit cargo-tarpaulin
 ```
+
+If your shell does not support `&&`, replace the combined commands with the equivalent for your environment.

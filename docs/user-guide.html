@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoBuild User Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* Palette: Black, White, Yellow, Gray */
+            --bg-body: #FAFAFA;
+            --bg-surface: #FFFFFF;
+            --text-main: #09090B;
+            --text-muted: #71717A;
+            --border-color: #E4E4E7;
+            
+            --primary: #FACC15; /* Vibrant Yellow */
+            --primary-hover: #EAB308;
+            --primary-fg: #000000;
+            
+            --black: #000000;
+            --black-hover: #27272A;
+            
+            --code-bg: #09090B;
+            --code-fg: #E4E4E7;
+            
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            
+            --sidebar-width: 280px;
+            --header-height: 64px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            z-index: 50;
+        }
+
+        .header-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .header-logo .icon-box {
+            background-color: var(--primary);
+            color: var(--primary-fg);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            display: flex;
+            margin-top: var(--header-height);
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: var(--header-height);
+            bottom: 0;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 3rem 4rem;
+            max-width: 900px;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--text-main);
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            scroll-margin-top: calc(var(--header-height) + 2rem);
+        }
+
+        h1 { font-size: 2.25rem; margin-bottom: 1rem; }
+        h2 { font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+        h3 { font-size: 1.25rem; margin-top: 2rem; margin-bottom: 0.75rem; }
+        p { margin-bottom: 1.25rem; color: #3F3F46; }
+        
+        .hero-lead {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        /* Sidebar Navigation */
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background-color: #F4F4F5;
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: #FEFCE8;
+            color: #854D0E;
+            font-weight: 600;
+        }
+
+        /* UI Components */
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 9999px;
+            padding: 0.125rem 0.625rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+        .badge-yellow { background-color: #FEF08A; border-color: #FACC15; color: #854D0E; }
+
+        /* Tables */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-surface);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        th {
+            background-color: var(--bg-body);
+            font-weight: 600;
+            color: var(--text-main);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: #3F3F46;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        
+        /* Code Blocks */
+        .code-container {
+            position: relative;
+            margin: 1.5rem 0;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background-color: var(--code-bg);
+            border: 1px solid #27272A;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: #18181B;
+            border-bottom: 1px solid #27272A;
+            color: #A1A1AA;
+            font-size: 0.75rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: none;
+            color: #A1A1AA;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            color: var(--text-surface);
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            color: var(--code-fg);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+
+        code {
+            font-family: inherit;
+        }
+
+        /* Inline code */
+        p code, li code, td code {
+            background-color: #F4F4F5;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            color: #18181B;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+            color: #3F3F46;
+        }
+        
+        li { margin-bottom: 0.5rem; }
+
+        /* Blockquote */
+        blockquote {
+            background-color: #FEFCE8;
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            color: #854D0E;
+            font-size: 0.875rem;
+        }
+        blockquote strong { font-weight: 600; color: #713F12; }
+
+        /* Diagram / ASCII box */
+        .diagram-box {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            font-size: 0.875rem;
+            color: var(--text-main);
+            white-space: pre;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        /* HR */
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--border-color);
+            margin: 3rem 0;
+        }
+
+        /* Mobile Menu */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 40;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 2rem 1.5rem;
+            }
+            .mobile-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle menu">
+            <i data-lucide="menu"></i>
+        </button>
+        <a href="#" class="header-logo" style="margin-left: 1rem;">
+            <div class="icon-box">
+                <i data-lucide="zap" size="18"></i>
+            </div>
+            AutoBuild
+        </a>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="nav-label">On This Page</div>
+            <a href="#what-is-autobuild" class="nav-item">1. What is AutoBuild?</a>
+            <a href="#installation" class="nav-item">2. Installation</a>
+            <a href="#configuration" class="nav-item">3. Configuration</a>
+            <a href="#writing-intent" class="nav-item">4. Writing Your First Intent</a>
+            <a href="#running-build" class="nav-item">5. Running a Build</a>
+            <a href="#build-modes" class="nav-item">6. Build Modes</a>
+            <a href="#understanding-scores" class="nav-item">7. Understanding Quality Scores</a>
+            <a href="#reading-results" class="nav-item">8. Reading Results</a>
+            <a href="#multi-agent-system" class="nav-item">9. The Multi-Agent System</a>
+            <a href="#learnings" class="nav-item">10. Learnings & Self-Improvement</a>
+            <a href="#best-practices" class="nav-item">11. Tips & Best Practices</a>
+            <a href="#troubleshooting" class="nav-item">12. Troubleshooting</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1>AutoBuild — User Guide</h1>
+            <div class="hero-lead">
+                Everything you need to go from <strong>zero to your first AI-built feature</strong> in under 10 minutes.
+            </div>
+
+            <hr>
+
+            <section id="what-is-autobuild">
+                <h2>1. What is AutoBuild?</h2>
+                <p>AutoBuild is a <strong>portable, markdown-based framework</strong> that turns any AI coding agent (Gemini, Claude, Cursor, Copilot, etc.) into a structured, self-improving software builder.</p>
+                <p>You define <strong>what</strong> you want built. The AI follows AutoBuild's structured workflow to <strong>plan, build, review, and iterate</strong> — producing higher-quality code than unstructured prompting.</p>
+                
+                <h3>Key concepts</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>What It Means</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge">Intent</span></td>
+                                <td>A description of what you want built (like a mini-spec)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Build program</span></td>
+                                <td>The strategy the AI follows (single-pass, multi-approach, autonomous loop)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Quality pipeline</span></td>
+                                <td>Seven automated checks that score every iteration 0–100</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Sub-agents</span></td>
+                                <td>Specialist reviewers (security, architecture, tests, quality) that inspect the work</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-yellow">Learnings</span></td>
+                                <td>Knowledge accumulated from past builds that makes future builds better</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>AutoBuild is not an application.</strong> It's a set of markdown instructions. There's nothing to install, no dependencies, no runtime. You copy the files into your project and point your AI agent at them.</p>
+            </section>
+
+            <section id="installation">
+                <h2>2. Installation</h2>
+                <h3>Prerequisites</h3>
+                <ul>
+                    <li>A project with <strong>Git</strong> initialized</li>
+                    <li>An AI coding agent (any will work)</li>
+                </ul>
+
+                <h3>Step-by-Step</h3>
+                <p><strong>1. Create the <code>.autobuild/</code> directory</strong> in your project root.</p>
+                <p><strong>2. Copy the workflow files</strong> from the AutoBuild repo:</p>
+                
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>Directory Layout</span>
+                        <button class="btn-copy" onclick="copyCode(this)"><i data-lucide="copy" size="14"></i> Copy</button>
+                    </div>
+<pre><code>.autobuild/
+├── program.md              ← from core/program.md
+├── quality-pipeline.md     ← from core/quality-pipeline.md
+│
+├── agents/                 ← entire agents/ folder
+├── programs/               ← entire programs/ folder
+├── intents/                ← entire intents/ folder
+│
+├── results/
+│   ├── results.tsv         ← create with headers (see below)
+│   └── learnings.md        ← from core/learnings-template.md
+│
+└── evaluation/             ← entire evaluation/ folder</code></pre>
+                </div>
+
+                <p><strong>3. Create <code>results/results.tsv</code></strong> with this header row:</p>
+                
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>results.tsv</span>
+                        <button class="btn-copy" onclick="copyCode(this)"><i data-lucide="copy" size="14"></i> Copy</button>
+                    </div>
+<pre><code>timestamp	branch	intent	approach	quality_score	tests	lint	security	types	complexity	coverage	architecture	status	description</code></pre>
+                </div>
+
+                <blockquote>
+                    <strong>Important:</strong> In the AutoBuild repo, the source entry point is <code>core/program.md</code>. In your project, the installed entry point is <code>.autobuild/program.md</code>. They're the same file — just different locations.
+                </blockquote>
+            </section>
+
+            <section id="configuration">
+                <h2>3. Configuration</h2>
+                <h3>3a. Project Context</h3>
+                <p>Copy <code>setup/project-context.template.md</code> → <code>.autobuild/project-context.md</code> and fill in project details. This file is your project's "constitution." The AI reads it before every task and follows its rules.</p>
+                
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>project-context.md</span>
+                        <button class="btn-copy" onclick="copyCode(this)"><i data-lucide="copy" size="14"></i> Copy</button>
+                    </div>
+<pre><code>## Project Overview
+- **Name:** Acme API
+- **Description:** REST API for the Acme e-commerce platform
+- **Primary language:** Python 3.12
+- **Framework:** FastAPI
+
+## Anti-Patterns (NEVER DO)
+1. Never use synchronous I/O in async contexts
+2. Never import from internal modules of third-party packages</code></pre>
+                </div>
+
+                <h3>3b. Quality Config</h3>
+                <p>Pick a <strong>stack preset</strong> from <code>stacks/</code> (e.g., <code>stacks/python.md</code>) and copy it to <code>.autobuild/quality-config.md</code>.</p>
+                <p>Each preset maps onto AutoBuild's <strong>7 canonical quality checks</strong>. Adjust weights to reflect your project's priorities (must total 100%).</p>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Check</th>
+                                <th>What It Measures</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Tests</td><td>Do all tests pass?</td></tr>
+                            <tr><td>Lint / Format</td><td>Is the code clean and formatted?</td></tr>
+                            <tr><td>Type Safety</td><td>Do types check out?</td></tr>
+                            <tr><td>Security</td><td>Any vulnerabilities, secrets, or audit failures?</td></tr>
+                            <tr><td>Complexity</td><td>Is the code reasonably simple?</td></tr>
+                            <tr><td>Coverage</td><td>How much code is tested?</td></tr>
+                            <tr><td>Architecture</td><td>Does it follow your project's conventions?</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="writing-intent">
+                <h2>4. Writing Your First Intent</h2>
+                <p>An <strong>intent</strong> is a small spec that tells the AI what to build. AutoBuild ships four intent templates: <code>feature.md</code>, <code>fix.md</code>, <code>refactor.md</code>, and <code>optimize.md</code>.</p>
+                
+                <h3>Quick Start</h3>
+                <p>Copy <code>_template.md</code> to <code>active-intent.md</code> and fill it out:</p>
+                
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>active-intent.md</span>
+                        <button class="btn-copy" onclick="copyCode(this)"><i data-lucide="copy" size="14"></i> Copy</button>
+                    </div>
+<pre><code>## Goal
+Add rate limiting to all public API endpoints.
+
+## Scope
+### IN
+- Implement sliding-window rate limiter middleware
+- Add tests for rate limiting behavior
+
+### OUT
+- Do not change authentication flow
+
+## Build Mode
+**Mode:** `standard`</code></pre>
+                </div>
+            </section>
+
+            <section id="running-build">
+                <h2>5. Running a Build</h2>
+                <p>Open your AI coding agent, point it at your project, and tell it:</p>
+                <blockquote>
+                    <strong>"Read <code>.autobuild/program.md</code> and execute the AutoBuild workflow."</strong>
+                </blockquote>
+                
+                <p>The agent will sequentially load context, analyze, plan, build, review, evaluate, and learn.</p>
+                
+                <h3>Iteration Logic</h3>
+                <div class="diagram-box">
+Code change → Run quality pipeline → Score 0-100
+    ↓
+  Score improved or held steady? No CRITICAL security issue?
+    YES → Keep this state (git commit)
+    NO  → Discard (git reset)
+    ↓
+  Is the score >= 80? → Ready to deliver
+  Score 60-79?        → Acceptable with notes
+  Score < 60?         → Not ready, keep iterating
+                </div>
+            </section>
+
+            <section id="build-modes">
+                <h2>6. Build Modes</h2>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mode</th>
+                                <th>When to Use</th>
+                                <th>How It Works</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge">Standard</span></td>
+                                <td>Simple, clear tasks</td>
+                                <td>Single-pass: implement → quality gate → review<br><span style="color:var(--text-muted);font-size:0.8em;">Up to 3 fix-and-retry cycles if quality checks fail. Escalates to you if it fails.</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Iterative</span></td>
+                                <td>Multiple valid approaches</td>
+                                <td>Try N approaches on branches, compare them, keep the best<br><span style="color:var(--text-muted);font-size:0.8em;">Agent proposes 2-3 approaches automatically. The winner is polished through full review.</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge badge-yellow">Overnight</span></td>
+                                <td>Large optimization space</td>
+                                <td>Autonomous loop until interrupted or plateaued<br><span style="color:var(--text-muted);font-size:0.8em;">Never asks for input. Stops after 10 consecutive discards. Reverts failures immediately.</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge">Optimize</span></td>
+                                <td>Target a specific metric</td>
+                                <td>Hill-climb toward a measurable goal (latency, size, etc.)<br><span style="color:var(--text-muted);font-size:0.8em;">You define what to measure and the target. Stops when target reached or plateaued.</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="understanding-scores">
+                <h2>7. Understanding Quality Scores</h2>
+                <p>Every iteration produces a composite score from 0 to 100 based on the seven weighted checks.</p>
+                
+                <h3>Two Decisions Per Score</h3>
+                <p>AutoBuild makes two <strong>separate</strong> decisions from each score:</p>
+                
+                <p><strong>1. Branch Retention:</strong></p>
+                <ul>
+                    <li>Improved/steady score + NO critical issues = <strong>Keep</strong> (commit)</li>
+                    <li>Regressed score OR critical security issue = <strong>Discard</strong> (reset)</li>
+                </ul>
+                
+                <p><strong>2. Delivery Readiness:</strong></p>
+                <ul>
+                    <li><strong>≥ 80:</strong> Ready to deliver</li>
+                    <li><strong>60 – 79:</strong> Acceptable with notes</li>
+                    <li><strong>< 60:</strong> Not ready (more work needed)</li>
+                </ul>
+            </section>
+
+            <section id="reading-results">
+                <h2>8. Reading Results</h2>
+                <ul>
+                    <li><strong><code>results/results.tsv</code></strong> — A complete history of every experiment the AI tried.</li>
+                    <li><strong><code>evaluation/latest-review.md</code></strong> — Generated at the end of each build containing the final score, sub-agent findings, and a human review checklist.</li>
+                    <li><strong><code>results/learnings.md</code></strong> — The growing knowledge base of what works for your project.</li>
+                </ul>
+            </section>
+
+            <section id="multi-agent-system">
+                <h2>9. The Multi-Agent System</h2>
+                <p>AutoBuild defines <strong>five specialist sub-agents</strong>. The orchestrator (<code>program.md</code>) activates them at the right time.</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Agent</th>
+                                <th>When Activated</th>
+                                <th>What It Does</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Builder</strong></td><td>Phase 3</td><td>Writes production-ready code following project conventions</td></tr>
+                            <tr><td><strong>Security Reviewer</strong></td><td>Phase 4</td><td>Scans for secrets, CVEs, missing input validation</td></tr>
+                            <tr><td><strong>Architecture Reviewer</strong></td><td>Phase 4</td><td>Checks compliance with architecture rules in project-context.md</td></tr>
+                            <tr><td><strong>Quality Scorer</strong></td><td>Phase 3/4</td><td>Runs the quality pipeline and reports score, retention, and readiness</td></tr>
+                            <tr><td><strong>Test Writer</strong></td><td>Phase 4</td><td>Strengthens test coverage for new/changed code</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Any <strong>CRITICAL</strong> finding from Security or Architecture review sends the code back to the Builder for fixes before delivery.</p>
+            </section>
+
+            <section id="learnings">
+                <h2>10. Learnings & Self-Improvement</h2>
+                <p>AutoBuild has a dual learning system. After each intent, it records what worked:</p>
+                <div class="code-container">
+<pre><code>## 2026-03-25: Rate Limiting Implementation
+- FastAPI middleware approach cleanest — decorator pattern caused import cycles
+- Pattern: always test with burst requests, not just steady-state</code></pre>
+                </div>
+                <p>Universal patterns can be placed in a globally referenced <code>sharedlearnings.md</code>.</p>
+            </section>
+
+            <section id="best-practices">
+                <h2>11. Tips & Best Practices</h2>
+                
+                <h3>Writing Good Intents</h3>
+                <ul>
+                    <li><strong>Be specific</strong> — "Add caching to the user endpoint" is better than "Make the app faster"</li>
+                    <li><strong>Define clear acceptance criteria</strong> — Testable, binary (done or not done)</li>
+                    <li><strong>Set explicit scope boundaries</strong> — OUT items prevent scope creep</li>
+                    <li><strong>Choose the right build mode</strong> — Don't use iterative for simple tasks</li>
+                </ul>
+
+                <h3>Git Workflow & Quality</h3>
+                <ul>
+                    <li><strong>AutoBuild always works on branches</strong> — never on the `main` branch.</li>
+                    <li>Each kept improvement is a separate commit, easy to cherry-pick or revert.</li>
+                    <li>Start with a quality preset, tune the weights after 3–5 builds.</li>
+                    <li>After a tricky build, take 2 minutes to review and refine the auto-generated learnings in <code>results/learnings.md</code>.</li>
+                </ul>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>12. Troubleshooting</h2>
+                <ul>
+                    <li><strong>"The agent doesn't follow the workflow":</strong> Make sure you tell it to read <code>.autobuild/program.md</code> specifically.</li>
+                    <li><strong>"The quality score is always 0":</strong> Check that your <code>quality-config.md</code> has the correct CLI commands for your stack. Verify they run locally first.</li>
+                    <li><strong>"The agent skips sub-agent reviews":</strong> Remind it to read Phase 4: SUB-AGENT REVIEWS in program.md.</li>
+                    <li><strong>"The agent modifies files outside the intent scope":</strong> Add an explicit anti-pattern in project-context.md: "Never modify files outside the intent's declared scope."</li>
+                    <li><strong>"Results aren't being logged":</strong> Verify the <code>results.tsv</code> file exists with the 14-column header row.</li>
+                </ul>
+            </section>
+
+            <section id="quick-reference">
+                <h2>Quick Reference Card</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>I want to...</th>
+                                <th>Do this</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Start a new task</strong></td><td>Copy an intent template → fill it in → save as <code>active-intent.md</code></td></tr>
+                            <tr><td><strong>Change quality weights</strong></td><td>Edit <code>.autobuild/quality-config.md</code></td></tr>
+                            <tr><td><strong>Add a project rule</strong></td><td>Edit <code>.autobuild/project-context.md</code></td></tr>
+                            <tr><td><strong>Review past experiments</strong></td><td>Open <code>results/results.tsv</code></td></tr>
+                            <tr><td><strong>See what the AI learned</strong></td><td>Read <code>results/learnings.md</code></td></tr>
+                            <tr><td><strong>Review the latest build</strong></td><td>Open <code>evaluation/latest-review.md</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <hr>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+                Built with <i data-lucide="zap" size="14" style="color: var(--primary); fill: var(--primary); display: inline-block; vertical-align: middle;"></i> <strong>AutoBuild</strong>
+            </p>
+        </main>
+    </div>
+
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Copy Code Functionality
+        function copyCode(btn) {
+            const pre = btn.parentElement.nextElementSibling;
+            const code = pre.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = '<i data-lucide="check" size="14"></i> Copied!';
+                lucide.createIcons();
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+
+        // Mobile Sidebar Toggle
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Close sidebar when clicking a link on mobile
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+
+        // Scrollspy for TOC
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-item');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -80% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

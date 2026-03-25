@@ -1,6 +1,6 @@
 # Quality Pipeline
 
-The Quality Pipeline produces a composite score (0-100) that determines whether an iteration is kept or discarded.
+The Quality Pipeline produces a composite score (0-100) that drives both branch retention and delivery readiness.
 
 ## How to Run
 
@@ -10,7 +10,8 @@ After every implementation iteration:
 2. Run each check in order
 3. Score each check (pass = full points, partial = proportional)
 4. Sum weighted scores → composite Quality Score
-5. Log to `results/results.tsv`
+5. Decide branch retention and delivery readiness
+6. Log to `results/results.tsv`
 
 ## Default Checks & Weights
 
@@ -62,14 +63,23 @@ Quality Score = tests_score + lint_score + security_score + types_score
 Range: 0 - 100
 ```
 
-## Thresholds
+## Retention vs Readiness
+
+AutoBuild uses one score for two different decisions.
+
+### Branch Retention
+
+- Improved or maintained score and no CRITICAL security finding → keep the branch state
+- Lower score or CRITICAL security finding → discard the branch state
+
+### Delivery Readiness
 
 | Threshold | Action |
 | --- | --- |
-| Score ≥ 80 | ✅ KEEP — solid quality |
-| Score 60-79 | ⚠️ KEEP with notes — acceptable but has issues to document |
-| Score < 60 | ❌ DISCARD — quality too low |
-| Security CRITICAL | 🚫 ALWAYS DISCARD — regardless of total score |
+| Score ≥ 80 | ✅ Ready to deliver |
+| Score 60-79 | ⚠️ Acceptable with notes |
+| Score < 60 | ❌ Not ready for delivery |
+| Security CRITICAL | 🚫 Never ready for delivery |
 
 ## Results Logging
 
@@ -86,7 +96,7 @@ Fields:
 - `approach`: approach identifier (for iterative mode)
 - `quality_score`: composite score (0-100)
 - `tests` through `architecture`: individual check results
-- `status`: `keep` or `discard`
+- `status`: branch action only — `keep` or `discard`
 - `description`: brief notes on what was attempted
 
 ## Adapting Weights
