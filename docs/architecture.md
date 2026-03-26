@@ -1,6 +1,6 @@
 # AutoBuild — Architecture Document
 
-> BMAD MTH-36 Architecture Workflow
+> Created using the BMad Method™ MTH-36 Architecture Workflow — see [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD)
 
 ## Architecture Decision Records
 

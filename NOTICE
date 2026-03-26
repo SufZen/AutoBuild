@@ -1,0 +1,22 @@
+AutoBuild
+Copyright (c) 2026 AutoBuild contributors
+
+This project was inspired by and incorporates ideas from:
+
+1. BMAD-METHOD (https://github.com/bmad-code-org/BMAD-METHOD)
+   Copyright (c) 2025 BMad Code, LLC
+   Licensed under the MIT License
+   AutoBuild's structured agent architecture and workflow methodology
+   were inspired by the BMad Method's approach to agile AI development.
+   BMad™, BMad Method™, and BMad Core™ are trademarks of BMad Code, LLC.
+   AutoBuild is an independent project and is not endorsed by or
+   affiliated with BMad Code, LLC.
+
+2. autoresearch (https://github.com/karpathy/autoresearch)
+   By Andrej Karpathy
+   Licensed under the MIT License (as stated in its README)
+   AutoBuild's overnight/autonomous iteration loop was inspired by
+   autoresearch's approach to continuous, autonomous experimentation.
+
+No source code was copied from either project. AutoBuild borrows
+concepts and methodology, not code.

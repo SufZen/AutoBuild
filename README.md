@@ -191,12 +191,16 @@ Pre-built quality configurations for:
 
 Custom stacks are easy to create — see `setup/quality-config.template.md`.
 
-## Inspired By
+## Acknowledgments
 
-- [**BMAD-METHOD**](https://github.com/bmad-code-org/BMAD-METHOD) — Structured agile AI development with specialized agents and workflows
-- [**Autoresearch**](https://github.com/karpathy/autoresearch) by Andrej Karpathy — Autonomous experiment loops for iterative improvement
+AutoBuild borrows concepts and methodology (not code) from two open-source projects:
 
-AutoBuild combines BMAD's structure with Autoresearch's autonomous iteration to create something greater than either alone.
+- [**BMAD-METHOD**](https://github.com/bmad-code-org/BMAD-METHOD) by BMad Code, LLC — Structured agile AI development with specialized agents and workflows. AutoBuild's multi-agent architecture and structured workflow phases were inspired by the BMad Method™ approach.
+- [**Autoresearch**](https://github.com/karpathy/autoresearch) by Andrej Karpathy — Autonomous experiment loops for iterative improvement. AutoBuild's overnight build mode was inspired by autoresearch's continuous experimentation pattern.
+
+BMad™, BMad Method™, and BMad Core™ are trademarks of BMad Code, LLC. AutoBuild is not endorsed by or affiliated with BMad Code, LLC or Andrej Karpathy.
+
+See [NOTICE](NOTICE) for full attribution details.
 
 ## License
 

@@ -1,6 +1,6 @@
 # AutoBuild — Product Requirements Document
 
-> BMAD MTH-35 Full PRD Track
+> Created using the BMad Method™ MTH-35 Full PRD Track — see [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD)
 
 ## 1. Overview
 
