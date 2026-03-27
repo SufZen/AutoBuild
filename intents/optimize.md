@@ -36,10 +36,27 @@
 - [ ] <!-- All tests still pass -->
 - [ ] <!-- No security issues introduced -->
 
+## Assumptions
+
+- <!-- e.g., Assumption that caching layer can be used -->
+
 ## Constraints
 
-- <!-- Must not change public API contracts -->
+### Security & Privacy
+
+- <!-- Must not introduce security issues in the pursuit of performance -->
+
+### Performance
+
+- <!-- Must meet the target metric defined above -->
+
+### Dependencies
+
 - <!-- Must not add heavy dependencies for marginal gains -->
+
+### Backward Compatibility
+
+- <!-- Must not change public API contracts -->
 
 ## Build Mode
 

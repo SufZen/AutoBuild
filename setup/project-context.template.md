@@ -8,6 +8,7 @@
 - **Description:** <!-- One sentence: what does this project do? -->
 - **Primary language:** <!-- e.g., Python 3.12, TypeScript 5.x, Go 1.22 -->
 - **Framework:** <!-- e.g., FastAPI, Next.js, Gin, Actix -->
+- **Execution Environment:** <!-- e.g., Run inside Docker container 'api', local shell 'nvm use 20' -->
 - **Shared learnings source (optional):** <!-- Absolute path, repo-relative path, or "none" -->
 
 ## Tech Stack
@@ -27,7 +28,7 @@
 
 ### File Structure
 
-```
+```text
 <!-- Describe your project's directory structure -->
 <!-- e.g., src/ for source, tests/ for tests, docs/ for documentation -->
 ```

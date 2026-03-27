@@ -28,10 +28,28 @@
 - [ ] <!-- No behavior changes (same inputs → same outputs) -->
 - [ ] <!-- New structure matches project's architectural patterns -->
 
+## Assumptions
+
+- <!-- List assumptions about testing coverage before refactor -->
+
 ## Constraints
 
-- <!-- GREEN TESTS AT ALL TIMES — every intermediate step must pass tests -->
+### Security & Privacy
+
+- <!-- Must maintain existing security boundaries -->
+
+### Performance
+
+- <!-- Must not degrade performance -->
+
+### Dependencies
+
+- <!-- Must not add new dependencies for a pure refactor -->
+
+### Backward Compatibility
+
 - <!-- No API/interface changes unless intent explicitly allows it -->
+- <!-- GREEN TESTS AT ALL TIMES — every intermediate step must pass tests -->
 
 ## Build Mode
 

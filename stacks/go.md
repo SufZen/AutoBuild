@@ -8,12 +8,12 @@ This preset still maps to AutoBuild's 7 canonical checks. Some checks use more t
 
 | Check | Command | Expected Output |
 | --- | --- | --- |
-| **Tests** | `go test ./...` | Exit code 0 |
+| **Tests** | `go test -race ./...` | Exit code 0 |
 | **Lint / Format** | `golangci-lint run` and `gofmt -l .` | Exit code 0 from linter and no output from `gofmt -l .` |
 | **Type Check** | `go vet ./...` | Exit code 0 |
 | **Security** | `govulncheck ./...` | No vulnerabilities |
 | **Complexity** | `Manual review or project-specific tooling` | Complexity observations |
-| **Coverage** | `go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out` | Coverage % |
+| **Coverage** | `go test -race -coverprofile=coverage.out ./... && go tool cover -func=coverage.out` | Coverage % |
 | **Architecture** | `Manual review against project-context.md` | Compliance observations |
 
 ## Weights

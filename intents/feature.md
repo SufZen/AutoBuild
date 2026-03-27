@@ -32,10 +32,28 @@
 - [ ] <!-- Documentation/comments for non-obvious logic -->
 - [ ] <!-- No breaking changes to existing functionality -->
 
+## Assumptions
+
+- <!-- Explicitly list knowns, unknowns, and edge cases -->
+
 ## Constraints
 
-- <!-- Must follow existing architectural patterns -->
+### Security & Privacy
+
+- <!-- Explicitly state any auth or data privacy needs -->
+
+### Performance
+
+- <!-- Metrics to maintain or hit -->
+
+### Dependencies
+
+- <!-- Explicit rules on adding packages -->
+
+### Backward Compatibility
+
 - <!-- Must maintain backward compatibility -->
+- <!-- Must follow existing architectural patterns -->
 
 ## Build Mode
 

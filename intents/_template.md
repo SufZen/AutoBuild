@@ -30,13 +30,33 @@
 - [ ] <!-- Criterion 2 -->
 - [ ] <!-- Criterion 3 -->
 
+## Assumptions
+
+<!-- Explicitly list knowns, unknowns, and edge cases. AI must validate these first if unsure. -->
+
+- <!-- e.g., Assuming the active user is already authenticated -->
+- <!-- e.g., Assuming the database table 'users' has an 'email' column -->
+
 ## Constraints
 
-<!-- What limitations or rules apply? -->
+<!-- What limitations or rules apply? Be explicit. -->
+
+### Security & Privacy
+
+- <!-- e.g., Must sanitize all user inputs -->
+- <!-- e.g., Does this handle PII? -->
+
+### Performance
+
+- <!-- e.g., Must stay under 100ms response time -->
+
+### Dependencies
+
+- <!-- e.g., Must not add new third-party dependencies -->
+
+### Backward Compatibility
 
 - <!-- e.g., Must not break existing API contracts -->
-- <!-- e.g., Must stay under 100ms response time -->
-- <!-- e.g., Must not add new dependencies -->
 
 ## Build Mode
 

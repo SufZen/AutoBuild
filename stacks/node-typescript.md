@@ -9,9 +9,9 @@ This preset still maps to AutoBuild's 7 canonical checks. Some checks use more t
 | Check | Command | Expected Output |
 | --- | --- | --- |
 | **Tests** | `npm test` or `npx vitest run` | Exit code 0 |
-| **Lint / Format** | `npx eslint . && npx prettier --check .` | Exit code 0 |
+| **Lint / Format** | `npx @biomejs/biome ci .` | Exit code 0 |
 | **Type Check** | `npx tsc --noEmit` | Exit code 0 |
-| **Security** | `npm audit --audit-level=high` | No HIGH+ vulnerabilities |
+| **Security** | `npm audit --omit=dev --audit-level=high` | No HIGH+ vulnerabilities |
 | **Complexity** | `Manual review or project-specific tooling` | Complexity observations |
 | **Coverage** | `npx vitest run --coverage` | Coverage % |
 | **Architecture** | `Manual review against project-context.md` | Compliance observations |
@@ -31,12 +31,12 @@ This preset still maps to AutoBuild's 7 canonical checks. Some checks use more t
 ## Installation
 
 ```bash
-npm install -D typescript eslint prettier vitest @vitest/coverage-v8
+npm install -D typescript @biomejs/biome vitest @vitest/coverage-v8
 ```
 
 ## Notes
 
 - For JavaScript-only projects, set Type Safety weight to 0% and redistribute
-- For Next.js, use `next lint` instead of `eslint .`
+- For frameworks with custom linters (like Next.js `next lint`), update the command if not using Biome
 - For Bun, replace `npm` commands with `bun` equivalents
 - If your shell does not support `&&`, replace the combined commands with the equivalent for your environment

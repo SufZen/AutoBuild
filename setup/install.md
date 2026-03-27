@@ -2,55 +2,29 @@
 
 > Add AutoBuild to any project in under 5 minutes.
 
-## Step 1: Copy Files
+## Step 1: Bootstrap via AI (Recommended)
 
-Create a `.autobuild/` folder in your project root, then copy the shipped workflow files into it:
+The fastest way to install AutoBuild is to let your AI agent do it for you.
 
-```
-.autobuild/
-├── program.md              ← from core/program.md
-├── quality-pipeline.md     ← from core/quality-pipeline.md
-├── agents/                 ← entire agents/ folder
-├── programs/               ← entire programs/ folder
-├── intents/                ← entire intents/ folder
-├── results/
-│   ├── results.tsv         ← create empty (headers only)
-│   └── learnings.md        ← from core/learnings-template.md
-└── evaluation/             ← copy the entire evaluation/ folder
-```
+1. Drop `setup/bootstrap.md` from the AutoBuild repository into your project root.
+2. Ask your AI: **"Read bootstrap.md and initialize AutoBuild for me."**
 
-**Source vs installed entrypoint:**
-- In the AutoBuild repo, the source entry point is `core/program.md`
-- In your project, the installed entry point is `.autobuild/program.md`
+The AI will intelligently copy the orchestrator files, analyze your tech stack, and generate your `project-context.md` and `quality-config.md` automatically.
 
-## Step 2: Configure Your Project
+---
 
-### 2a. Fill in Project Context
+## Step 2 (Alternative): Manual Installation
 
-Copy `setup/project-context.template.md` to `.autobuild/project-context.md` and fill in:
+If you prefer to install manually:
 
-- Your tech stack (language, framework, database)
-- Your code conventions (naming, file structure, patterns)
-- Your anti-patterns (what to avoid)
-- Optional shared learnings source path if you maintain one across projects
+1. Create a `.autobuild/` folder in your project root, then copy `core/program.md`, `core/quality-pipeline.md`, and the entire `agents/`, `programs/`, `intents/`, and `evaluation/` directories into it.
+2. Copy `setup/project-context.template.md` to `.autobuild/project-context.md` and fill in your tech stack.
+3. Pick your stack preset from `stacks/` (e.g., `stacks/python.md`), copy it to `.autobuild/quality-config.md`, and tweak.
+4. Create an empty `results/results.tsv` file with the correct headers and copy `core/learnings-template.md` to `results/learnings.md`.
 
-### 2b. Configure Quality
+## Step 3: Start Building
 
-1. Pick your stack preset from `stacks/` (e.g., `stacks/python.md`)
-2. Copy it to `.autobuild/quality-config.md`
-3. Customize the weights if needed (or use defaults)
-
-## Step 3: Initialize Results Log
-
-Create `results/results.tsv` with this header:
-
-```tsv
-timestamp	branch	intent	approach	quality_score	tests	lint	security	types	complexity	coverage	architecture	status	description
-```
-
-## Step 4: Start Building
-
-1. Copy an intent template (e.g., `intents/feature.md`)
+1. Copy an intent template (e.g., `.autobuild/intents/feature.md`)
 2. Fill it in and save as `.autobuild/intents/active-intent.md`
 3. Point your AI coding agent at `.autobuild/program.md`
 4. Tell the agent: "Read program.md and execute the AutoBuild workflow"

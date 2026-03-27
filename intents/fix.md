@@ -39,10 +39,27 @@
 - [ ] <!-- No other tests broken by the fix -->
 - [ ] <!-- Root cause documented in the commit message -->
 
+## Assumptions
+
+- <!-- List root cause assumptions before debugging -->
+
 ## Constraints
 
-- <!-- Minimal change — fix the bug, nothing more -->
+### Security & Privacy
+
+- <!-- Ensure fix doesn't bypass security checks -->
+
+### Performance
+
+- <!-- Fix must not regress performance -->
+
+### Dependencies
+
 - <!-- Must not introduce new dependencies for a bug fix -->
+
+### Backward Compatibility
+
+- <!-- Minimal change — fix the bug, nothing more -->
 
 ## Build Mode
 

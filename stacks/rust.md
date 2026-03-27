@@ -13,7 +13,7 @@ This preset still maps to AutoBuild's 7 canonical checks. Some checks use more t
 | **Type Check** | `cargo check` | Exit code 0 |
 | **Security** | `cargo audit` | No vulnerabilities |
 | **Complexity** | `Manual review or project-specific tooling` | Complexity observations |
-| **Coverage** | `cargo tarpaulin --out Stdout` | Coverage % |
+| **Coverage** | `cargo llvm-cov` | Coverage % |
 | **Architecture** | `Manual review against project-context.md` | Compliance observations |
 
 ## Weights
@@ -31,8 +31,8 @@ This preset still maps to AutoBuild's 7 canonical checks. Some checks use more t
 ## Installation
 
 ```bash
-rustup component add clippy
-cargo install cargo-audit cargo-tarpaulin
+rustup component add clippy llvm-tools-preview
+cargo install cargo-audit cargo-llvm-cov
 ```
 
 If your shell does not support `&&`, replace the combined commands with the equivalent for your environment.

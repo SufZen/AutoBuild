@@ -6,7 +6,7 @@ AutoBuild uses **7 canonical checks**: tests, lint/format, security, type safety
 
 ## Check Commands
 
-Fill in the commands that your project uses for each check. A single check may run more than one command when needed.
+Fill in the commands that your project uses for each check. Ensure you run them in the correct **Execution Environment** (e.g., inside Docker, with specific env vars).
 
 | Check | Command | Expected Output |
 | --- | --- | --- |
